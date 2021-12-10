@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source">
+      <UniqueIdentifier>{17392b3d-ef3e-4bc6-813c-8272e6cc9b68}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Header Files">
+      <UniqueIdentifier>{44c10cdd-4ba2-4af5-be77-5007bbb49a6c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Source Files">
+      <UniqueIdentifier>{373df93c-23a4-4b28-bc95-b09dd7a5b465}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Pch">
+      <UniqueIdentifier>{3fb5e149-aca3-41ab-901a-849edbe1cdba}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\pch.h">
+      <Filter>Source\Pch</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ServiceLocator.h">
+      <Filter>Source\Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\pch.cpp">
+      <Filter>Source\Pch</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source">
+      <UniqueIdentifier>{31a5ddfe-6464-4baa-b257-8be953092de8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Header Files">
+      <UniqueIdentifier>{d61ee01d-fc36-4a45-8f8c-2530730fb462}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Source Files">
+      <UniqueIdentifier>{f539b64e-a256-4d3f-a1fe-e5ad87e678e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Pch">
+      <UniqueIdentifier>{92eb91fa-a623-46b3-b1fc-9745c7ffb940}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\LauncherApp.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\pch.cpp">
+      <Filter>Source\Pch</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\pch.h">
+      <Filter>Source\Pch</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
