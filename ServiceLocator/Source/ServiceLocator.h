@@ -36,14 +36,22 @@ namespace Locator
 		template<typename T>
 		inline std::shared_ptr<T> Get() const
 		{
-			int hash = typeid(T).hash_code();
-			auto itr1 = instances.find(hash);
-			if (itr1 != instances.end())
-				return std::static_pointer_cast<T>(itr1->second);
+			try
+			{
+				int hash = typeid(T).hash_code();
+				auto itr1 = instances.find(hash);
+				if (itr1 != instances.end())
+					return std::static_pointer_cast<T>(itr1->second);
 
-			auto itr2 = servicesFactory.find(hash);
-			if (itr2 != servicesFactory.end())
-				return std::static_pointer_cast<T>(itr2->second());
+				auto itr2 = servicesFactory.find(hash);
+				if (itr2 != servicesFactory.end())
+					return std::static_pointer_cast<T>(itr2->second());
+			}
+			catch (const std::exception& ex)
+			{
+				std::cout << ex.what() << std::endl;
+			}
+			
 
 			return nullptr;
 		}

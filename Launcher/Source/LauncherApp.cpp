@@ -53,7 +53,7 @@ int main()
 
 	locator.get()->Clear();
 
-	// Service Factory Creation
+	// Service Factory Creation -> Option to create the raw pointer
 	locator.get()->RegisterServiceFactory<IConfiguration>([]() { return std::make_shared<Configuration>(); });
 	auto config1 = locator.get()->Get<IConfiguration>();
 	auto config2 = locator.get()->Get<IConfiguration>();
