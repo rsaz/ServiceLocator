@@ -38,28 +38,35 @@ int main()
 	// Service Locator initialization
 	auto locator = std::make_unique<ServiceLocator>();
 
-	// Service Registration
-	locator->RegisterService<ILogger>(new Logger());
-	// Check double registration
+	//// Service Registration
 	//locator->RegisterService<ILogger>(new Logger());
+	//locator->RegisterService<IConfiguration>(new Configuration());
+	//// Check double registration
+	////locator->RegisterService<ILogger>(new Logger());
 
-	locator->ServicesList();
+	//locator->ServicesList();
+	//locator->UnregisterService<ILogger>();
+	//locator->ServicesList();
 
-	// Request the service
-	auto logger1 = locator->Get<ILogger>();
-	// Guarantee same instance
-	auto logger2 = locator->Get<ILogger>();
-	logger1->Info("information");
-	logger2->Info("information");
+	//// Request the service
+	//auto logger1 = locator->Get<ILogger>();
+	//// Guarantee same instance
+	//auto logger2 = locator->Get<ILogger>();
+	//logger1->Info("information");
+	//logger2->Info("information");
 
-	locator->Clear();
+	//locator->Clear();
 
-	// Service Factory Creation -> Option to create the raw pointer
-	locator.get()->RegisterServiceFactory<IConfiguration>([]() { return std::make_shared<Configuration>(); });
+	//// Service Factory Creation -> Option to create the raw pointer
+	locator->RegisterServiceFactory<IConfiguration>([]() { return std::make_shared<Configuration>(); });
 	auto config1 = locator->Get<IConfiguration>();
 	auto config2 = locator->Get<IConfiguration>();
 	config1->Load();
 	config2->Load();
+
+	locator->ServicesFactoryList();
+
+	locator->UnregisterServiceFactory<IConfiguration>();
 
 	locator->ServicesFactoryList();
 

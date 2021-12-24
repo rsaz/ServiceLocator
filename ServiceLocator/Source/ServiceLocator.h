@@ -12,7 +12,10 @@ namespace Locator
 		inline void Clear()
 		{
 			instances.clear();
+			instancesTypes.clear();
+
 			servicesFactory.clear();
+			servicesFactoryTypes.clear();
 		};
 
 		template<typename T>
@@ -29,6 +32,22 @@ namespace Locator
 		};
 
 		template<typename T>
+		inline void UnregisterService()
+		{
+			auto hash = static_cast<int>(typeid(T).hash_code());
+			if (instances.find(hash) != instances.end())
+			{
+				instances.erase(hash);
+
+				auto it = std::find_if(instancesTypes.begin(), 
+					instancesTypes.end(), [&](const std::string& t) {return (t == typeid(T).name()); });
+				if (&it != nullptr) instancesTypes.erase(it);
+			}
+			else
+				std::cout << typeid(T).name() << " is not registered service!" << std::endl;
+		}
+
+		template<typename T>
 		inline void RegisterServiceFactory(std::function<std::shared_ptr<T>()> factory = []() { return std::make_shared<T>(); })
 		{
 			int hash = static_cast<int>(typeid(T).hash_code());
@@ -39,6 +58,22 @@ namespace Locator
 			}
 			else
 				std::cout << typeid(T).name() << " already registered!" << std::endl;
+		}
+
+		template<typename T>
+		inline void UnregisterServiceFactory()
+		{
+			auto hash = static_cast<int>(typeid(T).hash_code());
+			if (servicesFactory.find(hash) != servicesFactory.end())
+			{
+				servicesFactory.erase(hash);
+
+				auto it = std::find_if(servicesFactoryTypes.begin(),
+					servicesFactoryTypes.end(), [&](const std::string& t) {return (t == typeid(T).name()); });
+				if (&it != nullptr) servicesFactoryTypes.erase(it);
+			}
+			else
+				std::cout << typeid(T).name() << " is not registered service!" << std::endl;
 		}
 
 		template<typename T>
@@ -66,7 +101,8 @@ namespace Locator
 		{
 			if (instances.empty())
 			{
-				std::cout << "No services registered!\n";
+				instancesTypes.clear();
+				std::cout << "No singleton services registered!\n";
 				return;
 			}
 			
@@ -78,7 +114,8 @@ namespace Locator
 		{
 			if (servicesFactory.empty())
 			{
-				std::cout << "No services registered!\n";
+				servicesFactoryTypes.clear();
+				std::cout << "No factory services registered!\n";
 				return;
 			}
 
