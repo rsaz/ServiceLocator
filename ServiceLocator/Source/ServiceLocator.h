@@ -9,6 +9,9 @@ namespace Locator
 		inline ServiceLocator() : instances(), servicesFactory() {}
 		inline ~ServiceLocator() { Clear(); }
 
+		/// <summary> Method to clear all instances and type containers
+		/// <para> This method will unregister all services from singleton services and services factory
+		/// </summary>
 		inline void Clear()
 		{
 			instances.clear();
@@ -18,6 +21,13 @@ namespace Locator
 			servicesFactoryTypes.clear();
 		};
 
+		/// <summary> Method to Register a Singleton Service
+		/// <para>This method creates a hash to be associated with the the type registed in the unordered map.</para> 
+		/// <seealso cref="std::unordered_map"/>
+		/// <para>A Singleton object is provided every request, the same instance.</para> 
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="instance"></param>
 		template<typename T>
 		inline void RegisterService(T* instance = new T())
 		{
@@ -31,6 +41,11 @@ namespace Locator
 				std::cout << typeid(T).name() << " already registered!" << std::endl;
 		};
 
+		/// <summary> Method to Unregister a Singleton Service
+		/// <para>This method identifies if the type hash generated exist in the instances container.</para>
+		/// <para>The <paramref name="T"/> is the class service that will be unregistered</para>
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
 		template<typename T>
 		inline void UnregisterService()
 		{
@@ -47,6 +62,13 @@ namespace Locator
 				std::cout << typeid(T).name() << " is not registered service!" << std::endl;
 		}
 
+		/// <summary> Method to Register Service Factory
+		/// <para>This method creates a hash to be associated with the the type registed in the unordered map.</para>
+		/// <para>A Transient object is provided every request, a new instance.</para> 
+		/// <seealso cref="std::unordered_map"/>
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="instance"></param>
 		template<typename T>
 		inline void RegisterServiceFactory(std::function<std::shared_ptr<T>()> factory = []() { return std::make_shared<T>(); })
 		{
@@ -60,6 +82,11 @@ namespace Locator
 				std::cout << typeid(T).name() << " already registered!" << std::endl;
 		}
 
+		/// <summary> Method to Unregister a Factory Service
+		/// <para>This method identifies if the type hash generated exist in the servicesFactory container.</para>
+		/// <para>The <paramref name="T"/> is the class service that will be unregistered</para>
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
 		template<typename T>
 		inline void UnregisterServiceFactory()
 		{
@@ -76,6 +103,12 @@ namespace Locator
 				std::cout << typeid(T).name() << " is not registered service!" << std::endl;
 		}
 
+		/// <summary> Method to Request a Service
+		/// <para>This method provides the instance requested based on the type.</para>
+		/// <para>Types, Singletons or Transients are stored in different containers.</para>
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <returns>The instance requested</returns>
 		template<typename T>
 		inline std::shared_ptr<T> Get() const
 		{
@@ -97,6 +130,7 @@ namespace Locator
 			return nullptr;
 		}
 
+		/// <summary>Method returns a list of Singleton Services Registered</summary>
 		inline void ServicesList()
 		{
 			if (instances.empty())
@@ -110,6 +144,7 @@ namespace Locator
 			for (auto& service : instancesTypes) std::cout << "->" << " [ " << service << " ]" << std::endl;
 		}
 
+		/// <summary>Method returns a list of Factory Services Registered</summary>
 		inline void ServicesFactoryList()
 		{
 			if (servicesFactory.empty())

@@ -1,8 +1,10 @@
 #include "pch.h"
 #include "ServiceLocator.h"
 
+// Class Examples
 using Locator::ServiceLocator;
 
+#pragma region Classes Examples
 class ILogger
 {
 public:
@@ -32,42 +34,49 @@ public:
 		std::cout << "Loading configuration\n";
 	}
 };
+#pragma endregion
 
-int main()
+
+auto main() -> int
 {
 	// Service Locator initialization
 	auto locator = std::make_unique<ServiceLocator>();
 
-	//// Service Registration
-	//locator->RegisterService<ILogger>(new Logger());
-	//locator->RegisterService<IConfiguration>(new Configuration());
-	//// Check double registration
-	////locator->RegisterService<ILogger>(new Logger());
+	// Service Registration
+	locator->RegisterService<ILogger>(new Logger());
+	locator->RegisterService<IConfiguration>(new Configuration());
+	
+	// Check double registration
+	locator->RegisterService<ILogger>(new Logger());
 
-	//locator->ServicesList();
-	//locator->UnregisterService<ILogger>();
-	//locator->ServicesList();
+	// Request the service
+	auto logger1 = locator->Get<ILogger>();
 
-	//// Request the service
-	//auto logger1 = locator->Get<ILogger>();
-	//// Guarantee same instance
-	//auto logger2 = locator->Get<ILogger>();
-	//logger1->Info("information");
-	//logger2->Info("information");
+	// Guarantee same instance
+	auto logger2 = locator->Get<ILogger>();
+	logger1->Info("information");
+	logger2->Info("information");
 
-	//locator->Clear();
+	// Check Unregister Singleton Service
+	locator->ServicesList();
+	locator->UnregisterService<ILogger>();
+	locator->ServicesList();
 
-	//// Service Factory Creation -> Option to create the raw pointer
+	// Clear all services (Singleton and Transients)
+	locator->Clear();
+
+	// Service Factory Creation
 	locator->RegisterServiceFactory<IConfiguration>([]() { return std::make_shared<Configuration>(); });
+	
+	// Get a new instance upon each request
 	auto config1 = locator->Get<IConfiguration>();
 	auto config2 = locator->Get<IConfiguration>();
 	config1->Load();
 	config2->Load();
 
+	// Check Unregister Factory Services
 	locator->ServicesFactoryList();
-
 	locator->UnregisterServiceFactory<IConfiguration>();
-
 	locator->ServicesFactoryList();
 
 	return 0;
