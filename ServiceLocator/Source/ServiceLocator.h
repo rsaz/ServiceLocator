@@ -18,9 +18,12 @@ namespace Locator
 		template<typename T>
 		inline void RegisterService(T* instance = new T())
 		{
-			int hash = typeid(T).hash_code();
+			int hash = static_cast<int>(typeid(T).hash_code());
 			if (instances.find(hash) == instances.end())
+			{
 				instances.emplace(hash, instance);
+				instancesTypes.push_back(typeid(T).name());
+			}
 			else
 				std::cout << typeid(T).name() << " already registered!" << std::endl;
 		};
@@ -28,9 +31,14 @@ namespace Locator
 		template<typename T>
 		inline void RegisterServiceFactory(std::function<std::shared_ptr<T>()> factory = []() { return std::make_shared<T>(); })
 		{
-			int hash = typeid(T).hash_code();
+			int hash = static_cast<int>(typeid(T).hash_code());
 			if (servicesFactory.find(hash) == servicesFactory.end())
+			{
 				servicesFactory.emplace(hash, factory);
+				servicesFactoryTypes.push_back(typeid(T).name());
+			}
+			else
+				std::cout << typeid(T).name() << " already registered!" << std::endl;
 		}
 
 		template<typename T>
@@ -38,7 +46,7 @@ namespace Locator
 		{
 			try
 			{
-				int hash = typeid(T).hash_code();
+				int hash = static_cast<int>(typeid(T).hash_code());
 				auto itr1 = instances.find(hash);
 				if (itr1 != instances.end())
 					return std::static_pointer_cast<T>(itr1->second);
@@ -51,13 +59,38 @@ namespace Locator
 			{
 				std::cout << ex.what() << std::endl;
 			}
-			
-
 			return nullptr;
+		}
+
+		inline void ServicesList()
+		{
+			if (instances.empty())
+			{
+				std::cout << "No services registered!\n";
+				return;
+			}
+			
+			std::cout << "  " << " | " << "Registered Singletion Services" << " |" << std::endl;
+			for (auto& service : instancesTypes) std::cout << "->" << " [ " << service << " ]" << std::endl;
+		}
+
+		inline void ServicesFactoryList()
+		{
+			if (servicesFactory.empty())
+			{
+				std::cout << "No services registered!\n";
+				return;
+			}
+
+			std::cout << "  " << " | " << "Registered Factory Services" << " |" << std::endl;
+			for (auto& service : servicesFactoryTypes) std::cout << "->" << " [ " << service << " ]" << std::endl;
 		}
 
 	private:
 		std::unordered_map<int, std::shared_ptr<void>> instances;
+		std::vector<std::string> instancesTypes;
+
 		std::unordered_map<int, std::function<std::shared_ptr<void>()>> servicesFactory;
+		std::vector<std::string> servicesFactoryTypes;
 	};
 }

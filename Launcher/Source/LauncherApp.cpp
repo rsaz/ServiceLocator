@@ -33,32 +33,35 @@ public:
 	}
 };
 
-
 int main()
 {
 	// Service Locator initialization
 	auto locator = std::make_unique<ServiceLocator>();
 
 	// Service Registration
-	locator.get()->RegisterService<ILogger>(new Logger());
+	locator->RegisterService<ILogger>(new Logger());
 	// Check double registration
-	locator.get()->RegisterService<ILogger>(new Logger());
+	//locator->RegisterService<ILogger>(new Logger());
+
+	locator->ServicesList();
 
 	// Request the service
-	auto logger1 = locator.get()->Get<ILogger>();
+	auto logger1 = locator->Get<ILogger>();
 	// Guarantee same instance
-	auto logger2 = locator.get()->Get<ILogger>();
-	logger1.get()->Info("information");
-	logger2.get()->Info("information");
+	auto logger2 = locator->Get<ILogger>();
+	logger1->Info("information");
+	logger2->Info("information");
 
-	locator.get()->Clear();
+	locator->Clear();
 
 	// Service Factory Creation -> Option to create the raw pointer
 	locator.get()->RegisterServiceFactory<IConfiguration>([]() { return std::make_shared<Configuration>(); });
-	auto config1 = locator.get()->Get<IConfiguration>();
-	auto config2 = locator.get()->Get<IConfiguration>();
-	config1.get()->Load();
-	config2.get()->Load();
+	auto config1 = locator->Get<IConfiguration>();
+	auto config2 = locator->Get<IConfiguration>();
+	config1->Load();
+	config2->Load();
+
+	locator->ServicesFactoryList();
 
 	return 0;
 }
