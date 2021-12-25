@@ -70,8 +70,10 @@ namespace Locator
 		/// <typeparam name="T"></typeparam>
 		/// <param name="instance"></param>
 		template<typename T>
-		inline void RegisterServiceFactory(std::function<std::shared_ptr<T>()> factory = []() { return std::make_shared<T>(); })
+		inline void RegisterServiceFactory()
 		{
+			std::function<std::shared_ptr<T>()> factory = []() { return std::make_shared<T>(); };
+			
 			int hash = static_cast<int>(typeid(T).hash_code());
 			if (servicesFactory.find(hash) == servicesFactory.end())
 			{

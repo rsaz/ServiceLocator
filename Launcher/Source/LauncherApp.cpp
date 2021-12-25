@@ -67,7 +67,7 @@ auto main() -> int
 	locator->Clear();
 
 	// Service Factory Creation
-	locator->RegisterServiceFactory<Configuration>([]() { return std::make_shared<Configuration>(); });
+	locator->RegisterServiceFactory<Configuration>();
 	
 	// Get a new instance upon each request
 	auto config1 = locator->Get<Configuration>();
