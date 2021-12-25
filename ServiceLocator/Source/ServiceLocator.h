@@ -29,12 +29,12 @@ namespace Locator
 		/// <typeparam name="T"></typeparam>
 		/// <param name="instance"></param>
 		template<typename T>
-		inline void RegisterService(T* instance = new T())
+		inline void RegisterService()
 		{
 			int hash = static_cast<int>(typeid(T).hash_code());
 			if (instances.find(hash) == instances.end())
 			{
-				instances.emplace(hash, instance);
+				instances.emplace(hash, new T);
 				instancesTypes.push_back(typeid(T).name());
 			}
 			else

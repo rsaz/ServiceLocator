@@ -13,6 +13,7 @@ public:
 
 class Logger : public ILogger
 {
+public:
 	// Inherited via ILogger
 	virtual void Info(const std::string& message) override
 	{
@@ -43,40 +44,40 @@ auto main() -> int
 	auto locator = std::make_unique<ServiceLocator>();
 
 	// Service Registration
-	locator->RegisterService<ILogger>(new Logger());
-	locator->RegisterService<IConfiguration>(new Configuration());
+	locator->RegisterService<Logger>();
+	locator->RegisterService<Configuration>();
 	
 	// Check double registration
-	locator->RegisterService<ILogger>(new Logger());
+	locator->RegisterService<Logger>();
 
 	// Request the service
-	auto logger1 = locator->Get<ILogger>();
+	auto logger1 = locator->Get<Logger>();
 
 	// Guarantee same instance
-	auto logger2 = locator->Get<ILogger>();
+	auto logger2 = locator->Get<Logger>();
 	logger1->Info("information");
 	logger2->Info("information");
 
 	// Check Unregister Singleton Service
 	locator->ServicesList();
-	locator->UnregisterService<ILogger>();
+	locator->UnregisterService<Logger>();
 	locator->ServicesList();
 
 	// Clear all services (Singleton and Transients)
 	locator->Clear();
 
 	// Service Factory Creation
-	locator->RegisterServiceFactory<IConfiguration>([]() { return std::make_shared<Configuration>(); });
+	locator->RegisterServiceFactory<Configuration>([]() { return std::make_shared<Configuration>(); });
 	
 	// Get a new instance upon each request
-	auto config1 = locator->Get<IConfiguration>();
-	auto config2 = locator->Get<IConfiguration>();
+	auto config1 = locator->Get<Configuration>();
+	auto config2 = locator->Get<Configuration>();
 	config1->Load();
 	config2->Load();
 
 	// Check Unregister Factory Services
 	locator->ServicesFactoryList();
-	locator->UnregisterServiceFactory<IConfiguration>();
+	locator->UnregisterServiceFactory<Configuration>();
 	locator->ServicesFactoryList();
 
 	return 0;
