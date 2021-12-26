@@ -13,7 +13,7 @@ To simplify the classes relationships and dependencies, defining a single point 
 - The code is easy to test
 
 ### Install
-##### Copy the includes [folder](https://github.com/rsaz/ServiceLocator/tree/master/includes) to your build tree and use a C++ compilter >= 11
+##### Copy the includes [folder](https://github.com/rsaz/ServiceLocator/tree/master/include/slocator) to your build tree and use a C++ compilter >= 11
 ```
 
 $ git clone https://github.com/rsaz/ServiceLocator.git
