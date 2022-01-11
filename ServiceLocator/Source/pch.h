@@ -3,6 +3,7 @@
 #pragma region Standard
 #include <iostream>
 #include <memory>
+#include <sstream>
 #include <functional>
 #include <type_traits>
 

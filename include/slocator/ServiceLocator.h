@@ -33,16 +33,18 @@ namespace Locator
 		/// <typeparam name="T"></typeparam>
 		/// <param name="instance"></param>
 		template<typename T>
-		inline void RegisterService()
+		inline bool RegisterService()
 		{
 			int hash = static_cast<int>(typeid(T).hash_code());
 			if (instances.find(hash) == instances.end())
 			{
 				instances.emplace(hash, new T);
 				instancesTypes.push_back(typeid(T).name());
+
+				return true;
 			}
-			else
-				std::cout << typeid(T).name() << " already registered!" << std::endl;
+
+			return false;
 		};
 
 		/// <summary> Method to Unregister a Singleton Service
@@ -51,19 +53,21 @@ namespace Locator
 		/// </summary>
 		/// <typeparam name="T"></typeparam>
 		template<typename T>
-		inline void UnregisterService()
+		inline bool UnregisterService()
 		{
 			auto hash = static_cast<int>(typeid(T).hash_code());
 			if (instances.find(hash) != instances.end())
 			{
 				instances.erase(hash);
 
-				auto it = std::find_if(instancesTypes.begin(), 
+				auto it = std::find_if(instancesTypes.begin(),
 					instancesTypes.end(), [&](const std::string& t) {return (t == typeid(T).name()); });
 				if (&it != nullptr) instancesTypes.erase(it);
+
+				return true;
 			}
-			else
-				std::cout << typeid(T).name() << " is not registered service!" << std::endl;
+
+			return false;
 		}
 
 		/// <summary> Method to Register Service Factory
@@ -74,18 +78,20 @@ namespace Locator
 		/// <typeparam name="T"></typeparam>
 		/// <param name="instance"></param>
 		template<typename T>
-		inline void RegisterServiceFactory()
+		inline bool RegisterServiceFactory()
 		{
 			std::function<std::shared_ptr<T>()> factory = []() { return std::make_shared<T>(); };
-			
+
 			int hash = static_cast<int>(typeid(T).hash_code());
 			if (servicesFactory.find(hash) == servicesFactory.end())
 			{
 				servicesFactory.emplace(hash, factory);
 				servicesFactoryTypes.push_back(typeid(T).name());
+
+				return true;
 			}
-			else
-				std::cout << typeid(T).name() << " already registered!" << std::endl;
+
+			return false;
 		}
 
 		/// <summary> Method to Unregister a Factory Service
@@ -94,7 +100,7 @@ namespace Locator
 		/// </summary>
 		/// <typeparam name="T"></typeparam>
 		template<typename T>
-		inline void UnregisterServiceFactory()
+		inline bool UnregisterServiceFactory()
 		{
 			auto hash = static_cast<int>(typeid(T).hash_code());
 			if (servicesFactory.find(hash) != servicesFactory.end())
@@ -104,9 +110,11 @@ namespace Locator
 				auto it = std::find_if(servicesFactoryTypes.begin(),
 					servicesFactoryTypes.end(), [&](const std::string& t) {return (t == typeid(T).name()); });
 				if (&it != nullptr) servicesFactoryTypes.erase(it);
+
+				return true;
 			}
-			else
-				std::cout << typeid(T).name() << " is not registered service!" << std::endl;
+
+			return false;
 		}
 
 		/// <summary> Method to Request a Service
@@ -137,31 +145,35 @@ namespace Locator
 		}
 
 		/// <summary>Method returns a list of Singleton Services Registered</summary>
-		inline void ServicesList()
+		inline std::string ServicesList()
 		{
 			if (instances.empty())
 			{
 				instancesTypes.clear();
-				std::cout << "No singleton services registered!\n";
-				return;
+				return {};
 			}
-			
-			std::cout << "  " << " | " << "Registered Singletion Services" << " |" << std::endl;
-			for (auto& service : instancesTypes) std::cout << "->" << " [ " << service << " ]" << std::endl;
+
+			std::stringstream ss;
+			ss << "  " << " | " << "Registered Singletion Services" << " |" << "\n";
+			for (auto& service : instancesTypes) ss << "->" << " [ " << service << " ]" << "\n";
+
+			return ss.str();
 		}
 
 		/// <summary>Method returns a list of Factory Services Registered</summary>
-		inline void ServicesFactoryList()
+		inline std::string ServicesFactoryList()
 		{
 			if (servicesFactory.empty())
 			{
 				servicesFactoryTypes.clear();
-				std::cout << "No factory services registered!\n";
-				return;
+				return {};
 			}
 
-			std::cout << "  " << " | " << "Registered Factory Services" << " |" << std::endl;
-			for (auto& service : servicesFactoryTypes) std::cout << "->" << " [ " << service << " ]" << std::endl;
+			std::stringstream ss;
+			ss << "  " << " | " << "Registered Factory Services" << " |" << "\n";
+			for (auto& service : servicesFactoryTypes) ss << "->" << " [ " << service << " ]" << "\n";
+
+			return ss.str();
 		}
 
 	private:

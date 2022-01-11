@@ -59,9 +59,9 @@ auto main() -> int
 	logger2->Info("information");
 
 	// Check Unregister Singleton Service
-	locator->ServicesList();
+	std::cout << locator->ServicesList() << std::endl;
 	locator->UnregisterService<Logger>();
-	locator->ServicesList();
+	std::cout << locator->ServicesList() << std::endl;
 
 	// Clear all services (Singleton and Transients)
 	locator->Clear();
@@ -76,9 +76,9 @@ auto main() -> int
 	config2->Load();
 
 	// Check Unregister Factory Services
-	locator->ServicesFactoryList();
+	std::cout << locator->ServicesFactoryList() << std::endl;
 	locator->UnregisterServiceFactory<Configuration>();
-	locator->ServicesFactoryList();
+	std::cout << locator->ServicesFactoryList() << std::endl;
 
 	return 0;
 }
